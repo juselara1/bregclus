@@ -3,12 +3,32 @@ from sklearn.base import BaseEstimator, ClusterMixin
 from bregclus.divergences import euclidean
 
 class BregmanHard(BaseEstimator, ClusterMixin):
-    """
-    TODOC
-    """
 
-    def __init__(self, n_clusters=3, divergence=None, n_iters=1000, has_cov=False,
+    def __init__(self, n_clusters, divergence=euclidean, n_iters=1000, has_cov=False,
                  initializer="rand", init_iters=100):
+        """
+        Bregman Hard Clustering Algorithm
+
+        Parameters
+        ----------
+        n_clusters : INT
+            Number of clusters.
+        divergence : function
+            Pairwise divergence function. The default is euclidean.
+        n_iters : INT, optional
+            Number of clustering iterations. The default is 1000.
+        has_cov : BOOL, optional
+            Specifies if the divergence requires a covariance matrix. The default is False.
+        initializer : STR, optional
+            Specifies if the centroids are initialized at random "rand" or using K-Means++ "kmeans++". The default is "rand".
+        init_iters : INT, optional
+            Number of iterations for K-Means++. The default is 100.
+
+        Returns
+        -------
+        None.
+
+        """
         self.__n_clusters = n_clusters
         self.__divergence = divergence
         self.__n_iters = n_iters
@@ -17,6 +37,20 @@ class BregmanHard(BaseEstimator, ClusterMixin):
         self.__init_iters = init_iters
 
     def fit(self, X):
+        """
+        Training step.
+
+        Parameters
+        ----------
+        X : ARRAY
+            Input data matrix (n, m) of n samples and m features.
+
+        Returns
+        -------
+        TYPE
+            Trained model.
+
+        """
         self.__create_params(X)
         for _ in range(self.__n_iters):
             H = self.__assignments(X)
@@ -89,4 +123,18 @@ class BregmanHard(BaseEstimator, ClusterMixin):
                 self.cov[k] = np.einsum("ij,ik->jk", X_mk, X_mk)/X_k.shape[0]
 
     def predict(self, X):
+        """
+        Prediction step.
+
+        Parameters
+        ----------
+        X : ARRAY
+            Input data matrix (n, m) of n samples and m features.
+
+        Returns
+        -------
+        y: Array
+            Assigned cluster for each data point (n, )
+
+        """
         return self.__assignments(X)
