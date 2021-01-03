@@ -1,0 +1,5 @@
+dist/**
+build/**
+bregclus.egg-info/**
+__pycache__/
+*.pyc
