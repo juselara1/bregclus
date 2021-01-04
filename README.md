@@ -49,7 +49,7 @@ import numpy as np
 
 X = np.random.uniform(size=(100, 2))
 
-model = bregclus.models.BregmanHard(n_clusters=5, divergence=euclidean)
+model = BregmanHard(n_clusters=5, divergence=euclidean)
 model.fit(X)
 y_pred = model.predict(X)
 ```
