@@ -148,36 +148,35 @@ class BregmanHard(BaseEstimator, ClusterMixin):
         return self.assignments(X)
     
 class BregmanSoft(BregmanHard):
-        """
-        Bregman Soft Clustering Algorithm
+    """
+    Bregman Soft Clustering Algorithm
 
-        Parameters
-        ----------
-        n_clusters : INT
-            Number of clustes.
-        divergence : function
-            Pairwise divergence function. The default is euclidean.
-        n_iters : INT, optional
-            Number of clustering iterations. The default is 1000.
-        has_cov : BOOL, optional
-            Specifies if the divergence requires a covariance matrix. The default is False.
-        initializer : STR, optional
-            Specifies if the centroids are initialized at random "rand", K-Means++ "kmeans++", or a pretrained K-Means model "pretrained". The default is "rand".
-        init_iters : INT, optional
-            Number of iterations for K-Means++. The default is 100.
-        pretrainer : MODEL, optional
-            Pretrained K-Means model to use as pretrainer.
+    Parameters
+    ----------
+    n_clusters : INT
+        Number of clustes.
+    divergence : function
+        Pairwise divergence function. The default is euclidean.
+    n_iters : INT, optional
+        Number of clustering iterations. The default is 1000.
+    has_cov : BOOL, optional
+        Specifies if the divergence requires a covariance matrix. The default is False.
+    initializer : STR, optional
+        Specifies if the centroids are initialized at random "rand", K-Means++ "kmeans++", or a pretrained K-Means model "pretrained". The default is "rand".
+    init_iters : INT, optional
+        Number of iterations for K-Means++. The default is 100.
+    pretrainer : MODEL, optional
+        Pretrained K-Means model to use as pretrainer.
 
-        Returns
-        -------
-        None.
+    Returns
+    -------
+    None.
 
-        """
-
+    """
+        
     def __init__(self, *args, **kwargs):
-
         super(BregmanSoft, self).__init__(*args, **kwargs)
-    
+
     def init_mixing(self):
         logits = np.ones((self.n_clusters, ))
         return logits/logits.sum()
@@ -207,7 +206,7 @@ class BregmanSoft(BregmanHard):
                 X_mk = (X-self.params[k])*P[:, k].reshape(-1, 1)
                 new_covs = np.einsum("ij,ik->jk", X_mk, X_mk)+np.eye(X.shape[1])*0.01
                 self.cov[k] = new_covs/P[:, k].sum()
-    
+
     def predict(self, X):
         """
         Prediction step.
@@ -223,8 +222,6 @@ class BregmanSoft(BregmanHard):
             Assigned cluster for each data point (n, )
 
         """
-        return self.assignments(X)
-
         return np.argmax(self.assignments(X), axis=1)
 
     def predict_proba(self, X):
@@ -242,6 +239,4 @@ class BregmanSoft(BregmanHard):
             Probability of each cluster for each point (n, k)
 
         """
-        return self.assignments(X)
-
         return self.assignments(X)
