@@ -1,6 +1,7 @@
-from bregclus.models import BregmanHard
+from bregclus.models import BregmanSoft
 from bregclus.divergences import mahalanobis
 from sklearn.datasets import make_blobs
+from sklearn.cluster import KMeans
 import numpy as np
 import matplotlib.pyplot as plt
 # Setting random seed for replication
@@ -39,7 +40,7 @@ def decision_region(clf, X):
     return fig, ax
 
 def make_anisotropic():
-    X, y = make_blobs(n_samples=1000, cluster_std=0.5)
+    X, y = make_blobs(n_samples=1000, cluster_std=0.5, centers=3)
     transformation = [[0.6, -0.6], [-0.4, 0.8]]
     X_aniso = np.dot(X, transformation)
     return X_aniso
@@ -47,9 +48,11 @@ def make_anisotropic():
 if __name__ == '__main__':
     # Creating samples
     X = make_anisotropic()
+    # Pretrainer
+    pretrain = KMeans(n_clusters=3).fit(X)
     # Model definition
-    model = BregmanHard(n_clusters=3, divergence=mahalanobis, has_cov=True, n_iters=500,
-                        initializer="kmeans++")
+    model = BregmanSoft(n_clusters=3, divergence=mahalanobis, has_cov=True, n_iters=100,
+                        initializer="pretrainer", pretrainer=pretrain)
     # Model training
     model.fit(X)
     # Decision region

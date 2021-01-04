@@ -1,10 +1,10 @@
-from bregclus.models import BregmanHard
-from bregclus.divergences import mahalanobis
-from sklearn.datasets import make_blobs
+# Required libraries
+from bregclus import models, divergences
 import numpy as np
+from sklearn.datasets import make_blobs
 import matplotlib.pyplot as plt
-# Setting random seed for replication
-np.random.seed(4)
+# Setting seed for replication
+np.random.seed(1)
 
 # helper functions
 def decision_region(clf, X):
@@ -38,18 +38,12 @@ def decision_region(clf, X):
     
     return fig, ax
 
-def make_anisotropic():
-    X, y = make_blobs(n_samples=1000, cluster_std=0.5)
-    transformation = [[0.6, -0.6], [-0.4, 0.8]]
-    X_aniso = np.dot(X, transformation)
-    return X_aniso
-
 if __name__ == '__main__':
-    # Creating samples
-    X = make_anisotropic()
+    # Creating blobs
+    X = make_blobs(1000, centers=5, cluster_std=0.5)[0]
     # Model definition
-    model = BregmanHard(n_clusters=3, divergence=mahalanobis, has_cov=True, n_iters=500,
-                        initializer="kmeans++")
+    model = models.BregmanSoft(5, divergences.euclidean, n_iters=0,
+            initializer="kmeans++", init_iters=200)
     # Model training
     model.fit(X)
     # Decision region
