@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.base import BaseEstimator, ClusterMixin
+from sklearn.base import BaseEstimator, ClusterMixin, TransformerMixin
 from bregclus.divergences import euclidean
 
 class BregmanHard(BaseEstimator, ClusterMixin):
